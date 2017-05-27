@@ -1,0 +1,16 @@
+//created on: 2 Sep, 2016
+package rules
+import com.nokia.entities.Alarm;
+import com.nokia.entities.Message;
+//timer (int: 30s 10s; start=3-JAN-2010, end=5-JAN-2010)
+
+rule "Send SMS every 15 minutes"
+    //timer (cron:* 0/1 * * * ?)
+    //timer (cron:* 0/10 * * * ?)
+    timer ( int: 3s 5s )
+when
+    $a : Alarm( on == true )
+    
+then
+    System.out.println("Alarm Raised Message Sent to"+$a.getMessage().getMobileNumber() );
+end
