@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.jboss.org/drools"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <itemDefinition id="_message" structureRef="String" />
+
+  <process processType="Private" isExecutable="true" id="TimerProcess" name="TimerProcess" tns:packageName="defaultPackage" tns:version="1" >
+
+    <!-- process variables -->
+    <property id="message" itemSubjectRef="null"/>
+
+    <!-- nodes -->
+    <startEvent id="_1" name="StartProcess"  isInterrupting="true">
+    </startEvent>
+    <subProcess id="_2" name="Sub-Process" >
+    <!-- nodes -->
+    <startEvent id="_2-1" name="Start"  isInterrupting="true">
+    </startEvent>
+    <intermediateCatchEvent id="_2-2" name="Timer" >
+      <timerEventDefinition>
+        <timeCycle xsi:type="tFormalExpression">0s###1s</timeCycle>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <scriptTask id="_2-3" name="Action" scriptFormat="http://www.java.com/java" >
+      <script>System.out.println("Action! from inner process"+message);</script>
+    </scriptTask>
+    <endEvent id="_2-4" name="End" />
+
+    <!-- connections -->
+    <sequenceFlow id="_2-1-_2-2" sourceRef="_2-1" targetRef="_2-2" />
+    <sequenceFlow id="_2-2-_2-3" sourceRef="_2-2" targetRef="_2-3" />
+    <sequenceFlow id="_2-3-_2-4" sourceRef="_2-3" targetRef="_2-4" />
+    </subProcess>
+    <scriptTask id="_3" name="Timeout" scriptFormat="http://www.java.com/java" >
+      <script>System.out.println("Timeout!");</script>
+    </scriptTask>
+    <endEvent id="_4" name="End" >
+        <terminateEventDefinition />
+    </endEvent>
+    <boundaryEvent id="_5" name="Timeout" attachedToRef="_2" >
+      <extensionElements>
+        <tns:onExit-script scriptFormat="http://www.java.com/java"/>
+      </extensionElements>
+      <timerEventDefinition>
+        <timeDuration xsi:type="tFormalExpression">5s</timeDuration>
+      </timerEventDefinition>
+    </boundaryEvent>
+    <endEvent id="_jbpm-unique-6" name="End" >
+        <terminateEventDefinition />
+    </endEvent>
+
+    <!-- connections -->
+    <sequenceFlow id="_1-_2" sourceRef="_1" targetRef="_2" />
+    <sequenceFlow id="_5-_3" sourceRef="_5" targetRef="_3" />
+    <sequenceFlow id="_3-_4" sourceRef="_3" targetRef="_4" />
+    <sequenceFlow id="_2-_jbpm-unique-6" sourceRef="_2" targetRef="_jbpm-unique-6" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="TimerProcess" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds x="80" y="89" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2" >
+        <dc:Bounds x="166" y="39" width="424" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2-1" >
+        <dc:Bounds x="200" y="82" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2-2" >
+        <dc:Bounds x="283" y="82" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2-3" >
+        <dc:Bounds x="375" y="82" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2-4" >
+        <dc:Bounds x="512" y="81" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_3" >
+        <dc:Bounds x="293" y="266" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4" >
+        <dc:Bounds x="453" y="266" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_5" >
+        <dc:Bounds x="310" y="166" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_jbpm-unique-6" >
+        <dc:Bounds x="642" y="87" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_2-1-_2-2" >
+        <di:waypoint x="58" y="67" />
+        <di:waypoint x="141" y="67" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_2-2-_2-3" >
+        <di:waypoint x="141" y="67" />
+        <di:waypoint x="249" y="67" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_2-3-_2-4" >
+        <di:waypoint x="249" y="67" />
+        <di:waypoint x="370" y="66" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_1-_2" >
+        <di:waypoint x="104" y="113" />
+        <di:waypoint x="378" y="114" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_5-_3" >
+        <di:waypoint x="334" y="190" />
+        <di:waypoint x="333" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_3-_4" >
+        <di:waypoint x="333" y="290" />
+        <di:waypoint x="477" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_2-_jbpm-unique-6" >
+        <di:waypoint x="378" y="114" />
+        <di:waypoint x="666" y="111" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>
